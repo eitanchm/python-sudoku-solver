@@ -10,11 +10,11 @@ SIZE_OF_SQUARE = 3
 
 def solve_board(board):
     """Gets an unsolved board and tries to solve it, then returns the result."""
-    while is_solved(board) == False:
-        for i in range(0, len(board) * len(board)):
+    while is_solved(board) == False: #keeps running while the board isn't solved
+        for i in range(0, len(board) * len(board[0])): #length of row * length of col = total length
 	        row_index = int(i / NUM_OF_TILES)
 	        col_index = i % NUM_OF_TILES
-	        if board[row_index][col_index] == 0:
+	        if board[row_index][col_index] == 0: #if it's empty attempt to solve the tiles
 	    	    board = solve_tile(board, i)
     return board
 
@@ -95,6 +95,7 @@ def get_square(board, tile_index):
 
 
 def is_solved(board):
+	"""Checks the board for empty tiles, to see if it's solved"""
 	solved = True
 	for i in board:
 		for j in i:
