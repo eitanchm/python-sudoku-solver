@@ -10,13 +10,11 @@ SIZE_OF_SQUARE = 3
 
 def solve_board(board):
     """Gets an unsolved board and tries to solve it, then returns the result."""
-    while is_solved(board) == False: #keeps running while the board isn't solved
-        for i in range(0, len(board) * len(board[0])): #length of row * length of col = total length
-	        row_index = int(i / NUM_OF_TILES)
-	        col_index = i % NUM_OF_TILES
-	        if board[row_index][col_index] == 0: #if it's empty attempt to solve the tiles
-	    	    board = solve_tile(board, i)
-    return board
+    if find_next_empty(board) != -1:
+    	print('Solving...')
+    	solve_tile(board, find_next_empty(board))
+    else:
+    	print('Board already solved')
 
 
 def solve_tile(board, tile_index):
@@ -24,26 +22,18 @@ def solve_tile(board, tile_index):
     row_index = int(tile_index / NUM_OF_TILES)
     col_index = tile_index % NUM_OF_TILES
     possible_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    possible_solutions = []
-    """3 arrays to check all impossible solutions for the tile"""
-    row = get_row(board, tile_index)
-    col = get_col(board, tile_index)
-    square = get_square(board, tile_index)
-    """removes all impossible solutions for the tile"""
-    for i in row:
-    	possible_nums[i - 1] = 0
-    for i in col:
-    	possible_nums[i - 1] = 0
-    for i in square:
-    	possible_nums[i - 1] = 0
-    """builds a new array to represent all possible numbers to put in the tile"""
-    for i in possible_nums:
-    	if i != 0:
-    		possible_solutions.append(i)
-    """if there is only 1 possible solution places it"""
-    if len(possible_solutions) == 1:
-        board[row_index][col_index] = possible_solutions[0]
-    return board
+    """Checks to see if there is an empty tile"""
+    if find_next_empty(board) == -1:
+    	return True
+    else:
+    	for i in possible_nums: #check every possible number from 1 to 9
+    		if i not in (get_row(board, tile_index) + get_col(board, tile_index) + get_square(board, tile_index)):
+    			#check if i doesn't exist in the row, column, or square of the current tile
+    			board[row_index][col_index] = i #check the tile's value, backtrack
+    			if solve_tile(board, find_next_empty(board)) != True: #if it's not a correct solution
+    				board[row_index][col_index] = 0 #reset last tile's value, backtrack
+    			else:
+    				return True #This carries forward the return True when there aren't any empty tiles
 
 
 def get_row(board, tile_index):
@@ -102,3 +92,15 @@ def is_solved(board):
 			if j == 0:
 				solved = False
 	return solved
+
+
+def find_next_empty(board):
+	"""Returns the first empty tile it finds"""
+	empty_index = -1
+	for i in range(0, len(board) * len(board)):
+		row_index = int(i / NUM_OF_TILES)
+		col_index = i % NUM_OF_TILES
+		if board[row_index][col_index] == 0:
+			empty_index = i
+			break
+	return empty_index
