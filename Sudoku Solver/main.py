@@ -17,7 +17,7 @@ def main():
                    [0, 0, 1, 0, 0, 0, 0, 6, 8],
                    [0, 0, 8, 5, 0, 0, 0, 1, 0],
                    [0, 9, 0, 0, 0, 0, 4, 0, 0]]
-    grid = Grid(9, 9, 500, 500)
+    grid = Grid(hard_sudoku)
     grid.run()
     input("Press Enter to continue...")
 

@@ -1,8 +1,14 @@
 NUM_OF_TILES = 9
 SIZE_OF_SQUARE = 3
+
+#Grid settings:
+
 HEIGHT = 600
 WIDTH = 600
+ROWS = 9
+COLS = 9
 
 #Colors:
 
 WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
