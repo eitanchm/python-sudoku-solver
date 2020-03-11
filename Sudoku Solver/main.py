@@ -4,7 +4,7 @@
 ######################################
 
 
-from GUI import *
+from GUI import Grid
 
 
 def main():
