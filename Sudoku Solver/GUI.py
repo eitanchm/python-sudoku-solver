@@ -3,7 +3,8 @@
 #      Credit: Eitan Chmelevsky      #
 ######################################
 
-import pygame
+from pygame import *
+from functions import *
 
 
 class Grid:
@@ -17,5 +18,5 @@ class Grid:
 
 
 	def draw(self):
+		font = pygame.font.SysFont("comicsans", 40)
 		pygame.display.set_mode((self.width, self.height))
-		
