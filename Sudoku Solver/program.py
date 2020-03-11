@@ -17,12 +17,9 @@ def main():
                    [0, 0, 1, 0, 0, 0, 0, 6, 8],
                    [0, 0, 8, 5, 0, 0, 0, 1, 0],
                    [0, 9, 0, 0, 0, 0, 4, 0, 0]]
-    grid = Grid.__init__(9, 9, 500, 500)
+    grid = Grid(9, 9, 500, 500)
     grid.draw()
-    for i in range(9):
-        for j in range(9):
-            print(hard_sudoku[i][j], " ", end='')
-        print()
+    
     input("Press Enter to continue...")
 
 
