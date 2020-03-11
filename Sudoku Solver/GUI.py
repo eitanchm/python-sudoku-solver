@@ -6,7 +6,8 @@
 
 import pygame
 from settings import (ROWS, COLS, WIDTH, HEIGHT, WHITE, BLACK, GRID_POS,
-                      NUM_OF_TILES, SIZE_OF_SQUARE)
+                      NUM_OF_TILES, SIZE_OF_SQUARE, GRID_SIZE, CELL_SIZE,
+                      SELECTION_COLOR, THIN, THICK, SELECTION_WIDTH)
 # from functions import *
 
 
@@ -20,6 +21,8 @@ class Grid():
         self.cols = COLS
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         self.running = True
+        self.mousePos = None
+        self.selected = None
 
     def run(self):
         """Runs the pygame"""
@@ -32,43 +35,69 @@ class Grid():
     def events(self):
         """Checks for events until QUIT is received"""
         for event in pygame.event.get():
+            # Quit game event
             if event.type == pygame.QUIT:
                 self.running = False
+            # Mouse click event
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.selected = self.mouseOnGrid()
+                print(self.selected)
 
     def update(self):
-        pass
+        self.mousePos = pygame.mouse.get_pos()
 
     def draw(self):
         """Draws the updates of the board on screen"""
         self.window.fill(WHITE)
         self.drawGrid()
+        # Draw selection over grid if there is a selection
+        if self.selected:
+            self.drawSelection()
         pygame.display.update()
 
     def drawGrid(self):
         """Draws the sudoku grid on top of the drawn white screen"""
-        grid_width = WIDTH - 60  # Grid's right line
-        grid_height = HEIGHT - 60  # Grid's down line
         # Grid's rectangle:
-        rect = (GRID_POS[0], GRID_POS[1], grid_width, grid_height)
+        rect = (GRID_POS[0], GRID_POS[1], GRID_SIZE, GRID_SIZE)
         pygame.draw.rect(self.window, BLACK, rect, 3)
         for i in range(1, NUM_OF_TILES):  # Exclude the edges of the grid
-            width = 1
+            # Determine width
+            width = THIN
             if i % SIZE_OF_SQUARE == 0:
                 # Every 3 tiles, make it a bold line
-                width = 3
+                width = THICK
 
-            # Vertical lines:
-            line_x = (GRID_POS[0] + grid_width / NUM_OF_TILES * i)
+            # Vertical lines
+            line_x = (GRID_POS[0] + GRID_SIZE / NUM_OF_TILES * i)
             # Starting position for the line
             start_pos = (line_x, GRID_POS[1])
             # Ending position for the line
-            end_pos = (line_x, grid_height + GRID_POS[1])
+            end_pos = (line_x, GRID_SIZE + GRID_POS[1])
             pygame.draw.line(self.window, BLACK, start_pos, end_pos, width)
 
-            # Horizontal lines:
-            line_y = (GRID_POS[1] + grid_height / NUM_OF_TILES * i)
+            # Horizontal lines
+            line_y = (GRID_POS[1] + GRID_SIZE / NUM_OF_TILES * i)
             # Starting position for the line
             start_pos = (GRID_POS[0], line_y)
             # Ending position for the line
-            end_pos = (GRID_POS[0] + grid_width, line_y)
+            end_pos = (GRID_POS[0] + GRID_SIZE, line_y)
             pygame.draw.line(self.window, BLACK, start_pos, end_pos, width)
+
+    def mouseOnGrid(self):
+        # Compare mouse (x,y) with grid bounds
+        if (self.mousePos[0] < GRID_POS[0] or
+            self.mousePos[0] > (GRID_POS[0] + GRID_SIZE) or
+            self.mousePos[1] < GRID_POS[1] or
+                self.mousePos[1] > (GRID_POS[1] + GRID_SIZE)):
+            return None
+        # Return tile position: (0 - 8, 0 - 8)
+        return (int((self.mousePos[0] - GRID_POS[0]) / CELL_SIZE),
+                int((self.mousePos[1] - GRID_POS[1]) / CELL_SIZE))
+
+    def drawSelection(self):
+        # Draws a line over the selected tile
+        rect_x = self.selected[0] * CELL_SIZE + GRID_POS[0]
+        rect_y = self.selected[1] * CELL_SIZE + GRID_POS[1]
+        rect = (rect_x, rect_y, CELL_SIZE, CELL_SIZE)
+        pygame.draw.rect(self.window, SELECTION_COLOR, rect, SELECTION_WIDTH)
+        # No return
