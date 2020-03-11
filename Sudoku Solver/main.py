@@ -18,8 +18,7 @@ def main():
                    [0, 0, 8, 5, 0, 0, 0, 1, 0],
                    [0, 9, 0, 0, 0, 0, 4, 0, 0]]
     grid = Grid(9, 9, 500, 500)
-    grid.draw()
-    
+    grid.run()
     input("Press Enter to continue...")
 
 

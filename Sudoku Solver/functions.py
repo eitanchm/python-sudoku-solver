@@ -4,8 +4,7 @@
 ########################################
 
 
-NUM_OF_TILES = 9
-SIZE_OF_SQUARE = 3
+from settings import *
 
 
 def solve_board(board):

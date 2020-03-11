@@ -11,12 +11,11 @@ from functions import *
 
 class Grid():
 
-	def __init__(self, rows, cols, width, height):
+	def __init__(self, rows, cols):
+		pygame.init()
 		self.rows = rows
 		self.cols = cols
-		self.width = width
-		self.height = height
-		pygame.init()
+		self.window = pygame.display.set_mode((WIDTH, HEIGHT))
 		self.running = True
 	
 	def run(self):
@@ -25,16 +24,16 @@ class Grid():
 			self.update()
 			self.draw()
 		pygame.quit()
-
-	def draw(self):
-		font = pygame.font.SysFont("comicsans", 40)
-		white = [255, 255, 255]
-		screen = pygame.display.set_mode((self.width, self.height))
-		screen.fill(white);
-		pygame.display.set_caption("Sudoku Solver")
-		pygame.display.flip()
 	
 	def events(self):
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				self.running = False
+	
+	def update(self):
+		pass
+
+	def draw(self):
+		self.window.fill(WHITE)
+		pygame.display.set_caption("Sudoku Solver")
+		pygame.display.flip()

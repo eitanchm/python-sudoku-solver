@@ -1,0 +1,8 @@
+NUM_OF_TILES = 9
+SIZE_OF_SQUARE = 3
+HEIGHT = 600
+WIDTH = 600
+
+#Colors:
+
+WHITE = (255, 255, 255)
