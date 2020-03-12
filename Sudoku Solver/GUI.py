@@ -7,8 +7,9 @@
 import pygame
 from settings import (ROWS, COLS, WIDTH, HEIGHT, WHITE, BLACK, GRID_POS,
                       NUM_OF_TILES, SIZE_OF_SQUARE, GRID_SIZE, CELL_SIZE,
-                      SELECTION_COLOR, THIN, THICK, SELECTION_WIDTH)
-# from functions import *
+                      SELECTION_COLOR, THIN, THICK, SELECTION_WIDTH, FONT_SIZE)
+from functions import solve_board
+import _thread
 
 
 class Grid():
@@ -42,6 +43,8 @@ class Grid():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.selected = self.mouseOnGrid()
                 print(self.selected)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                _thread.start_new_thread(solve_board, (self.grid,))
 
     def update(self):
         self.mousePos = pygame.mouse.get_pos()
@@ -53,6 +56,7 @@ class Grid():
         # Draw selection over grid if there is a selection
         if self.selected:
             self.drawSelection()
+        self.fillWithNums()
         pygame.display.update()
 
     def drawGrid(self):
@@ -101,3 +105,21 @@ class Grid():
         rect = (rect_x, rect_y, CELL_SIZE, CELL_SIZE)
         pygame.draw.rect(self.window, SELECTION_COLOR, rect, SELECTION_WIDTH)
         # No return
+
+    def fillWithNums(self):
+        """ Fills the grid with the numbers in the grid array """
+        for i in range(ROWS):
+            for j in range(COLS):
+                if self.grid[i][j] != 0:
+                    self.displayNum(self.grid[i][j], j, i)
+
+    def displayNum(self, num, x, y):
+        font = pygame.font.SysFont('comicsansms', FONT_SIZE)
+        text_surf = font.render(str(num), True, BLACK)
+        text_rect = text_surf.get_rect()
+        # Center the text inside the box
+        text_x = GRID_POS[0] + (CELL_SIZE * x) + (CELL_SIZE / 2)
+        text_y = GRID_POS[1] + (CELL_SIZE * y) + (CELL_SIZE / 2)
+        text_rect.center = (text_x, text_y)
+        # Display the number
+        self.window.blit(text_surf, text_rect)
