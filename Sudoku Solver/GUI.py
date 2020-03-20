@@ -7,7 +7,8 @@
 import pygame
 from settings import (ROWS, COLS, WIDTH, HEIGHT, WHITE, BLACK, GRID_POS,
                       NUM_OF_TILES, SIZE_OF_SQUARE, GRID_SIZE, CELL_SIZE,
-                      SELECTION_COLOR, THIN, THICK, SELECTION_WIDTH, FONT_SIZE)
+                      SELECTION_COLOR, THIN, THICK, SELECTION_WIDTH, FONT_SIZE,
+                      ASCII_ZERO)
 from functions import solve_board
 import _thread
 
@@ -43,8 +44,20 @@ class Grid():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.selected = self.mouseOnGrid()
                 print(self.selected)
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                _thread.start_new_thread(solve_board, (self.grid,))
+            # Keydown event
+            if event.type == pygame.KEYDOWN:
+                # Solve on return press
+                if event.key == pygame.K_RETURN:
+                    _thread.start_new_thread(solve_board, (self.grid,))
+                # Get user input
+                if event.key >= pygame.K_1 and event.key <= pygame.K_9:
+                    if self.selected is not None:
+                        # Gets num instead of ASCII value
+                        num = event.key - ASCII_ZERO
+                        self.grid[self.selected[1]][self.selected[0]] = num
+                if event.key == pygame.K_BACKSPACE:  # Delete value in tile
+                    if self.selected is not None:
+                        self.grid[self.selected[1]][self.selected[0]] = 0
 
     def update(self):
         self.mousePos = pygame.mouse.get_pos()
